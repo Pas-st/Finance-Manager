@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<title>Finance Manager</title>
+<link rel="stylesheet" href="/static/style.css">
+<script src="/static/script.js"></script>
+</head>
+<body>
+
+<div class="burger" onclick="toggleMenu()">☰</div>
+
+<div class="sidebar" id="sidebar">
+    <button onclick="showDashboard()">Dashboard</button>
+    <button onclick="showTransactions()">Transaktionen</button>
+</div>
+
+<div class="content">
+
+    <!-- DASHBOARD -->
+    <div id="dashboard" class="page active">
+        <h1>Dashboard</h1>
+        <div id="summary"></div>
+    </div>
+
+    <!-- TRANSAKTIONEN -->
+    <div id="transactions" class="page">
+        <h1>Transaktionen</h1>
+
+        <div class="controls">
+            <button onclick="openPopup()">+ Hinzufügen</button>
+            <select id="sort" onchange="renderTable()">
+                <option value="asc">Datum ↑</option>
+                <option value="desc">Datum ↓</option>
+            </select>
+
+            <select id="filter" onchange="renderTable()">
+                <option value="Alle">Alle</option>
+                <option value="Einnahme">Einnahmen</option>
+                <option value="Ausgabe">Ausgaben</option>
+            </select>
+        </div>
+
+        <table>
+            <thead>
+                <tr>
+                    <th>Datum</th>
+                    <th>Betrag</th>
+                    <th>Typ</th>
+                    <th>Beschreibung</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+    </div>
+
+</div>
+
+<!-- POPUP -->
+<div id="popup" class="popup">
+    <div class="popup-content">
+        <input type="text" id="date" placeholder="TT.MM.JJ">
+        <input type="number" id="amount" placeholder="Betrag">
+        <select id="type">
+            <option value="Einnahme">Einnahme</option>
+            <option value="Ausgabe">Ausgabe</option>
+        </select>
+        <input type="text" id="description" placeholder="Beschreibung">
+        <button onclick="saveEntry()">Speichern</button>
+        <button onclick="closePopup()">Abbrechen</button>
+    </div>
+</div>
+</body>
+</html>
