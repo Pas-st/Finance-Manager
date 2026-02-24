@@ -33,20 +33,69 @@ function switchPage(id) {
     document.getElementById(id).classList.add("active");
 }
 
+/* DASHBOARD */
+
 function updateDashboard() {
-    let einnahmen = 0;
-    let ausgaben = 0;
+    let income = 0;
+    let expense = 0;
 
     data.forEach(e => {
-        if (e.type === "Einnahme") einnahmen += Number(e.amount);
-        else ausgaben += Number(e.amount);
+        if (e.type === "Einnahme") income += Number(e.amount);
+        else expense += Number(e.amount);
     });
 
-    document.getElementById("summary").innerHTML =
-        `Einnahmen: ${einnahmen} €<br>
-         Ausgaben: ${ausgaben} €<br>
-         Saldo: ${einnahmen - ausgaben} €`;
+    document.getElementById("totalIncome").textContent =
+        income.toLocaleString() + " €";
+
+    document.getElementById("totalExpense").textContent =
+        expense.toLocaleString() + " €";
+
+    document.getElementById("totalProfit").textContent =
+        (income - expense).toLocaleString() + " €";
+
+    drawChart();
 }
+
+function drawChart() {
+    const canvas = document.getElementById("financeChart");
+    const ctx = canvas.getContext("2d");
+
+    canvas.width = canvas.parentElement.offsetWidth - 40;
+    canvas.height = 300;
+
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    let income = [];
+    let expense = [];
+
+    data.forEach(e => {
+        if (e.type === "Einnahme") income.push(Number(e.amount));
+        else expense.push(Number(e.amount));
+    });
+
+    const max = Math.max(...income, ...expense, 100);
+
+    function drawLine(values, color) {
+        ctx.beginPath();
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2;
+
+        values.forEach((v, i) => {
+            let x = (canvas.width / (values.length - 1)) * i;
+            let y = canvas.height - (v / max) * canvas.height;
+
+            if (i === 0) ctx.moveTo(x, y);
+            else ctx.lineTo(x, y);
+        });
+
+        ctx.stroke();
+    }
+
+    drawLine(income, "#2563eb");
+    drawLine(expense, "#dc2626");
+}
+
+/* TRANSAKTIONEN */
 
 function renderTable() {
     const tbody = document.getElementById("tableBody");
@@ -60,13 +109,15 @@ function renderTable() {
         filtered = filtered.filter(e => e.type === filter);
     }
 
-    filtered.sort((a,b)=>{
+    filtered.sort((a, b) => {
         const da = a.date.split(".").reverse().join("");
         const db = b.date.split(".").reverse().join("");
-        return sort === "asc" ? da.localeCompare(db) : db.localeCompare(da);
+        return sort === "asc"
+            ? da.localeCompare(db)
+            : db.localeCompare(da);
     });
 
-    filtered.forEach(e=>{
+    filtered.forEach(e => {
         tbody.innerHTML += `
         <tr>
             <td>${e.date}</td>
@@ -112,7 +163,7 @@ function saveEntry() {
 }
 
 function editEntry(id) {
-    const e = data.find(x=>x.__id === id);
+    const e = data.find(x => x.__id === id);
     date.value = e.date;
     amount.value = e.amount;
     type.value = e.type;
@@ -122,7 +173,7 @@ function editEntry(id) {
 }
 
 function deleteEntry(id) {
-    data = data.filter(e=>e.__id !== id);
+    data = data.filter(e => e.__id !== id);
     saveData();
     updateDashboard();
     renderTable();

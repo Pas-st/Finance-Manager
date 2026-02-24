@@ -4,7 +4,6 @@
 <meta charset="UTF-8">
 <title>Finance Manager</title>
 <link rel="stylesheet" href="/static/style.css">
-<script src="/static/script.js"></script>
 </head>
 <body>
 
@@ -19,8 +18,37 @@
 
     <!-- DASHBOARD -->
     <div id="dashboard" class="page active">
-        <h1>Dashboard</h1>
-        <div id="summary"></div>
+
+        <div class="topbar">
+            <h2>Dashboard</h2>
+            <select>
+                <option>Monatsansicht</option>
+                <option selected>Quartalsansicht</option>
+                <option>Jahresansicht</option>
+            </select>
+        </div>
+
+        <div class="cards">
+            <div class="card income">
+                <h3>Gesamteinnahmen</h3>
+                <p id="totalIncome">0 €</p>
+            </div>
+
+            <div class="card expense">
+                <h3>Gesamtausgaben</h3>
+                <p id="totalExpense">0 €</p>
+            </div>
+
+            <div class="card profit">
+                <h3>Gesamtgewinn</h3>
+                <p id="totalProfit">0 €</p>
+            </div>
+        </div>
+
+        <div class="chart-container">
+            <canvas id="financeChart"></canvas>
+        </div>
+
     </div>
 
     <!-- TRANSAKTIONEN -->
@@ -29,6 +57,7 @@
 
         <div class="controls">
             <button onclick="openPopup()">+ Hinzufügen</button>
+
             <select id="sort" onchange="renderTable()">
                 <option value="asc">Datum ↑</option>
                 <option value="desc">Datum ↓</option>
@@ -71,5 +100,7 @@
         <button onclick="closePopup()">Abbrechen</button>
     </div>
 </div>
+
+<script src="/static/script.js"></script>
 </body>
 </html>
